@@ -18,4 +18,14 @@ using namespace glm;
 
 int run(int width, int height, const char* title, void (*init) (), void (*display) ());
 
+/*
+ * Renders a beautiful wired teapot...
+ */
+void draw_wire_teapot(GLdouble size);
+
+/*
+ * Renders a beautiful filled teapot...
+ */
+void draw_solit_teapot(GLdouble size);
+
 #endif _TUTORIAL_HELPER_H_

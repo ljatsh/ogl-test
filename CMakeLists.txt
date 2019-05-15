@@ -70,6 +70,27 @@ target_link_libraries(tutorial02_red_triangle
 #set_target_properties(tutorial02_red_triangle PROPERTIES XCODE_ATTRIBUTE_CONFIGURATION_BUILD_DIR "${CMAKE_CURRENT_SOURCE_DIR}/tutorial02_red_triangle/")
 create_target_launcher(tutorial02_red_triangle WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/build/tutorial02_red_triangle/")
 
+# Tutorial 3
+add_executable(tutorial03_shader_uniform
+    src/03_shader_uniform.cpp
+)
+target_link_libraries(tutorial03_shader_uniform
+    ${ALL_LIBS}
+    common
+)
+# Xcode and Visual working directories
+create_target_launcher(tutorial03_shader_uniform WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/build/tutorial03_shader_uniform/")
+
+# Tutorial 4
+add_executable(tutorial04_shader_vertex_attribute
+    src/04_shader_vertex_attribute.cpp
+)
+target_link_libraries(tutorial04_shader_vertex_attribute
+    ${ALL_LIBS}
+    common
+)
+# Xcode and Visual working directories
+create_target_launcher(tutorial04_shader_vertex_attribute WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/build/tutorial04_shader_vertex_attribute/")
 
 if (NOT ${CMAKE_GENERATOR} MATCHES "Xcode" )
     add_custom_command(
