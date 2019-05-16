@@ -255,7 +255,7 @@ void draw_wire_teapot(GLdouble size)
     darw_teapot(10, size, GL_LINE);
 }
 
-void draw_solit_teapot(GLdouble size)
+void draw_solid_teapot(GLdouble size)
 {
     /* We will use the general teapot rendering code */
     darw_teapot(7, size, GL_FILL);
