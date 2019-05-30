@@ -92,6 +92,17 @@ target_link_libraries(tutorial04_shader_vertex_attribute
 # Xcode and Visual working directories
 create_target_launcher(tutorial04_shader_vertex_attribute WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/build/tutorial04_shader_vertex_attribute/")
 
+# Tutorial 5
+add_executable(tutorial05_matrix
+    src/05_matrix.cpp
+)
+target_link_libraries(tutorial05_matrix
+    ${ALL_LIBS}
+    common
+)
+# Xcode and Visual working directories
+create_target_launcher(tutorial05_matrix WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/build/tutorial05_matrix/")
+
 if (NOT ${CMAKE_GENERATOR} MATCHES "Xcode" )
     add_custom_command(
         TARGET tutorial01_first_window POST_BUILD
