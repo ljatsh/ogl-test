@@ -23,14 +23,25 @@ void check_color() {
   fprintf(stdout, "GL_RGBA_MODE: %s\n", rgba_mode ? "yes" : "no");
 }
 
+void check_point() {
+  GLfloat size;
+  GLboolean point_smooth;
+  glGetFloatv(GL_POINT_SIZE, &size);
+  glGetBooleanv(GL_POINT_SMOOTH, &point_smooth);
+  printf("GL_POINT_SIZE: %f\n", size);
+  printf("GL_POINT_SMOOTH: %s\n", point_smooth ? "yes" : "no");
+}
+
 void
 init()
 {
   glEnableClientState(GL_VERTEX_ARRAY);
   glEnableClientState(GL_COLOR_ARRAY);
+  glPointSize(10);
 
   fprintf(stdout, "default opengl state:\n");
   check_color();
+  check_point();
 }
 
 void
@@ -39,9 +50,8 @@ display()
   // Normalized Coordinates
 
   /////////// points
-  fprintf(stdout, "draw five green points:\n");
+ //draw five green points
   glColor4ub(0, 255, 0, 255);
-  check_color();
   glBegin(GL_POINTS);
     glVertex2f(0.0f, 0.0f);
     glVertex2f(0.5f, 0.5f);
@@ -50,7 +60,7 @@ display()
     glVertex2f(-0.5f, 0.5f);
   glEnd();
 
-  fprintf(stdout, "draw four points in different colors by 1 opengl command:\n");
+  // draw four points in different colors by 1 opengl command
   GLfloat points[8] = {0.25f, 0.25f,
                        0.25f, -0.25f,
                        -0.25f, -0.25f,
