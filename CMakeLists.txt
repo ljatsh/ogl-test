@@ -114,6 +114,17 @@ target_link_libraries(tutorial06_colored_cube
 # Xcode and Visual working directories
 create_target_launcher(tutorial06_colored_cube WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/build/tutorial06_colored_cube/")
 
+# Tutorial 7
+add_executable(tutorial07_primitives
+    src/07_primitives.cpp
+)
+target_link_libraries(tutorial07_primitives
+    ${ALL_LIBS}
+    common
+)
+# Xcode and Visual working directories
+create_target_launcher(tutorial07_primitives WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/build/tutorial07_primitives/")
+
 if (NOT ${CMAKE_GENERATOR} MATCHES "Xcode" )
     add_custom_command(
         TARGET tutorial01_first_window POST_BUILD
