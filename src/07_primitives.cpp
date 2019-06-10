@@ -5,6 +5,7 @@
 // 1. alpha 0 has no effect while drawing points
 // 2. OpenGL Color Blending
 // 3. glClearColor and glClear (OpenGL buffers)
+// 4. line style algorithm
 
 // Tips:
 // 1. glInterleavedArrays is useful to call glDrawElement
@@ -28,8 +29,17 @@ void check_point() {
   GLboolean point_smooth;
   glGetFloatv(GL_POINT_SIZE, &size);
   glGetBooleanv(GL_POINT_SMOOTH, &point_smooth);
-  printf("GL_POINT_SIZE: %f\n", size);
-  printf("GL_POINT_SMOOTH: %s\n", point_smooth ? "yes" : "no");
+  fprintf(stdout, "GL_POINT_SIZE: %f\n", size);
+  fprintf(stdout, "GL_POINT_SMOOTH: %s\n", point_smooth ? "yes" : "no");
+}
+
+void check_line() {
+  GLfloat line_width;
+  GLboolean line_smooth;
+  glGetFloatv(GL_LINE_WIDTH, &line_width);
+  glGetBooleanv(GL_LINE_SMOOTH, &line_smooth);
+  fprintf(stdout, "GL_LINE_WIDTH: %f\n", line_width);
+  fprintf(stdout, "GL_LINE_SMOOTH: %s\n", line_smooth ? "yes" : "no");
 }
 
 void
@@ -37,11 +47,18 @@ init()
 {
   glEnableClientState(GL_VERTEX_ARRAY);
   glEnableClientState(GL_COLOR_ARRAY);
-  glPointSize(10);
+  glEnable(GL_LINE_STIPPLE);
 
   fprintf(stdout, "default opengl state:\n");
   check_color();
   check_point();
+  check_line();
+
+  fprintf(stdout, "updated opengl state:\n");
+  glPointSize(10);
+  glLineWidth(5);
+  check_point();
+  check_line();
 }
 
 void
@@ -50,6 +67,7 @@ display()
   // Normalized Coordinates
 
   /////////// points
+
  //draw five green points
   glColor4ub(0, 255, 0, 255);
   glBegin(GL_POINTS);
@@ -73,6 +91,27 @@ display()
   glVertexPointer(2, GL_FLOAT, 0, points);
   glColorPointer(3, GL_UNSIGNED_BYTE, 0, colors);
   glDrawElements(GL_POINTS, 4, GL_UNSIGNED_BYTE, indices);
+
+  //////////// lines
+  glLineStipple(1, 0x00FF);
+  glBegin(GL_LINES);
+    glVertex2f(0.0f, 0.0f);
+    glVertex2f(0.3f, 0.4f);
+    glVertex2f(0.0f, 0.0f);
+    glVertex2f(0.3f, -0.4f);
+  glEnd();
+
+  glBegin(GL_LINE_STRIP);
+    glVertex2f(-0.8f, -0.8f);
+    glVertex2f(-0.7f, -0.7f);
+    glVertex2f(-0.6f, -0.5f);
+  glEnd();
+
+  glBegin(GL_LINE_LOOP);
+    glVertex2f(0.8f, -0.8f);
+    glVertex2f(0.7f, -0.7f);
+    glVertex2f(0.6f, -0.5f);
+  glEnd();
 
   glFlush();
 }
