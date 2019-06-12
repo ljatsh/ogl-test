@@ -1,6 +1,8 @@
 
 #include "helper.h"
 
+// glfwGetWindowSize vs glfwGetFramebufferSize https://stackoverflow.com/questions/44719635/what-is-the-difference-between-glfwgetwindowsize-and-glfwgetframebuffersize
+
 void show_gl_info() {
   fprintf(stdout, "gl information:\n");
   fprintf(stdout, "vendor:%s\n", glGetString(GL_VENDOR));
@@ -8,6 +10,22 @@ void show_gl_info() {
   fprintf(stdout, "version:%s\n", glGetString(GL_VERSION));
   fprintf(stdout, "glsl version:%s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
   fprintf(stdout, "extensions:%s\n", glGetString(GL_EXTENSIONS));
+}
+
+void on_error(int error, const char* description) {
+  fprintf(stderr, "glfw error %d: %s\n", error, description);
+}
+
+void on_position_updated(GLFWwindow* wnd, int x, int y) {
+  fprintf(stdout, "GLFWwindow %p position was updated to %d, %d\n", wnd, x, y); 
+}
+
+void on_size_updated(GLFWwindow* wnd, int width, int height) {
+  int w, h;
+  glfwGetWindowSize(wnd, &w, &h);
+  fprintf(stdout, "GLFWwindow %p size was updated to %d, %d\n", wnd, w, h);
+  glfwGetFramebufferSize(wnd, &w, &h);
+  fprintf(stdout, "GLFWwindow %p frame buffer size: %d, %d\n", wnd, w, h);
 }
 
 int run(int width, int height, const char* title, void (*init) (), void (*display) ()) {
@@ -29,6 +47,10 @@ int run(int width, int height, const char* title, void (*init) (), void (*displa
     return -1;
   }
   glfwMakeContextCurrent(window);
+
+  glfwSetErrorCallback(on_error);
+  glfwSetWindowPosCallback(window, on_position_updated);
+  glfwSetWindowSizeCallback(window, on_size_updated);
 
   // Initialize GLEW
   if (glewInit() != GLEW_OK) {

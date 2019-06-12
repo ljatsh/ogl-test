@@ -9,6 +9,7 @@
 
 // Tips:
 // 1. glInterleavedArrays is useful to call glDrawElement
+// 2. GL_QUADS and GL_POLYGON are similar as GL_TRIANGLES
 
 void check_color() {
   // check current color
@@ -111,6 +112,27 @@ display()
     glVertex2f(0.8f, -0.8f);
     glVertex2f(0.7f, -0.7f);
     glVertex2f(0.6f, -0.5f);
+  glEnd();
+
+  ///////////// triangles
+  glBegin(GL_TRIANGLES);
+    glVertex2f(-0.8f, 0.8f);
+    glVertex2f(-0.7f, 0.7f);
+    glVertex2f(-0.6f, 0.5f);
+
+    glVertex2f(-0.8f, 0.8f);
+    glVertex2f(-0.9f, 0.7f);
+    glVertex2f(-1.0f, 1.0f);
+  glEnd();
+
+  glBegin(GL_TRIANGLE_STRIP);
+    glVertex2f(0.8f, 0.8f);
+    glVertex2f(0.7f, 0.7f);
+    glVertex2f(0.6f, 0.5f);
+
+    glVertex2f(0.8f, 0.8f);
+    glVertex2f(0.9f, 0.7f);
+    glVertex2f(1.0f, 1.0f);
   glEnd();
 
   glFlush();

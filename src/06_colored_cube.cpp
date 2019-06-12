@@ -13,6 +13,8 @@ GLuint vertexColorID;
 GLuint colorbuffer;
 GLuint programID;
 
+// It seems that glEnableVertexAttribArray and glBindBuffer shoule be combined together
+
 void
 init()
 {
@@ -133,8 +135,21 @@ init()
   // in the "MVP" uniform
   glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
 
+  // Enable depth test
+  glEnable(GL_DEPTH_TEST);
+  // Accept fragment if it closer to the camera than the former one
+  glDepthFunc(GL_LESS);
+}
+
+void
+display()
+{
+  // Clear the screen
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
   // 1rst attribute buffer : vertices
   glEnableVertexAttribArray(vertexPosition_modelspaceID);
+  glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
   glVertexAttribPointer(
      vertexPosition_modelspaceID,     // The attribute we want to configure
      3,                               // size
@@ -155,15 +170,14 @@ init()
       0,                           // stride
       (void*)0                     // array buffer offset
   );
-}
 
-void
-display()
-{
   // Draw the triangle !
   glDrawArrays(GL_TRIANGLES, 0, 12 * 3);
 
   glFlush();
+
+  glDisableVertexAttribArray(vertexPosition_modelspaceID);
+  glDisableVertexAttribArray(vertexColorID);
 }
 
 int
@@ -173,6 +187,7 @@ main()
 
   // Cleanup VBO
   glDeleteBuffers(1, &vertexbuffer);
+  glDeleteBuffers(1, &colorbuffer);
   glDeleteProgram(programID);
 
   return ret;
