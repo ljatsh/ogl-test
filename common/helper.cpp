@@ -1,5 +1,7 @@
 
 #include "helper.h"
+#include <time.h>
+#include <math.h>
 
 // glfwGetWindowSize vs glfwGetFramebufferSize https://stackoverflow.com/questions/44719635/what-is-the-difference-between-glfwgetwindowsize-and-glfwgetframebuffersize
 
@@ -91,6 +93,17 @@ int run(int width, int height, const char* title, void (*init) (), void (*displa
   glfwTerminate();
 
   return 0;
+}
+
+void
+init_rand() {
+  srand(time(NULL));
+}
+
+int
+rand(int min, int max) {
+  float v = rand() * 1.0 / RAND_MAX;
+  return min + floor((max - min) * v);
 }
 
 /*

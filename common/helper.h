@@ -33,4 +33,11 @@ void draw_wire_teapot(GLdouble size);
  */
 void draw_solid_teapot(GLdouble size);
 
+void init_rand();
+
+/*
+  Generates a random interger >= min and >= max
+ */
+int rand(int min, int max);
+
 #endif _TUTORIAL_HELPER_H_
