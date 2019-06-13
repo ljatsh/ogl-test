@@ -136,6 +136,17 @@ target_link_libraries(tutorial08_texture_mapping
 # Xcode and Visual working directories
 create_target_launcher(tutorial08_texture_mapping WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/build/tutorial08_texture_mapping/")
 
+# Tutorial 9
+add_executable(tutorial09_textured_cube
+    src/09_textured_cube.cpp
+)
+target_link_libraries(tutorial09_textured_cube
+    ${ALL_LIBS}
+    common
+)
+# Xcode and Visual working directories
+create_target_launcher(tutorial09_textured_cube WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/build/tutorial09_textured_cube/")
+
 if (NOT ${CMAKE_GENERATOR} MATCHES "Xcode" )
     add_custom_command(
         TARGET tutorial01_first_window POST_BUILD
@@ -145,6 +156,7 @@ elseif (${CMAKE_GENERATOR} MATCHES "Xcode" )
     add_custom_command(
         TARGET common POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/shader" "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/shader"
+        COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/texture" "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/texture"
     )
 endif (NOT ${CMAKE_GENERATOR} MATCHES "Xcode" )
 

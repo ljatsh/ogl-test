@@ -40,4 +40,8 @@ void init_rand();
  */
 int rand(int min, int max);
 
+GLuint load_bmp(const char* path);
+
+GLuint load_dds(const char* path);
+
 #endif _TUTORIAL_HELPER_H_
