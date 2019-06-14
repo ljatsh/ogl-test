@@ -9,5 +9,7 @@ uniform sampler2D myTextureSampler;
 void main(){
 
 	// Output color = color of the texture at the specified UV
-	gl_FragColor = texture2D( myTextureSampler, UV );
+    //gl_FragColor = texture2D( myTextureSampler, UV );
+    // inverse dds texture coordinate
+	gl_FragColor = texture2D( myTextureSampler, vec2(UV.x, 1.0 - UV.y) );
 }

@@ -14,6 +14,10 @@ GLuint uvbuffer;
 GLuint programID;
 GLuint textureID;
 
+// TODO:
+// Show dds without mipmaps
+
+// Tips:
 // It seems that glEnableVertexAttribArray and glBindBuffer shoule be combined together
 
 void
@@ -139,8 +143,9 @@ init()
   glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
 
   // Load the texture using any two methods
-  GLuint textureID = load_bmp("texture/uvtemplate.bmp");
+  //GLuint textureID = load_bmp("texture/uvtemplate.bmp");
   //GLuint textureID = load_dds("texture/uvtemplate.DDS");
+  GLuint textureID = load_dds("texture/uvtemplate_dx5_miplevel1.DDS");
   // Get a handle for our "myTextureSampler" uniform
   GLuint sampler = glGetUniformLocation(programID, "myTextureSampler");
 
