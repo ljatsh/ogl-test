@@ -5,7 +5,12 @@
 #include <math.h>
 #include <string.h>
 
+#include <glm/gtc/matrix_transform.hpp>
+
 // glfwGetWindowSize vs glfwGetFramebufferSize https://stackoverflow.com/questions/44719635/what-is-the-difference-between-glfwgetwindowsize-and-glfwgetframebuffersize
+
+glm::mat4 g_current_view_matrix;
+glm::mat4 g_current_projection_matrix;
 
 void show_gl_info() {
   fprintf(stdout, "gl information:\n");
@@ -283,6 +288,96 @@ GLuint load_dds(const char* path) {
   free(buffer); 
 
   return textureID;
+}
+
+// Initial position : on +Z
+glm::vec3 position = glm::vec3( 0, 0, 5 ); 
+// Initial horizontal angle : toward -Z
+float horizontalAngle = 3.14f;
+// Initial vertical angle : none
+float verticalAngle = 0.0f;
+// Initial Field of View
+float initialFoV = 45.0f;
+
+float speed = 3.0f; // 3 units / second
+float mouseSpeed = 0.005f;
+
+void refresh_matrix_from_control(GLFWwindow* wnd) {
+  // glfwGetTime is called only once, the first time this function is called
+  static double lastTime = glfwGetTime();
+
+  // Compute time difference between current and last frame
+  double currentTime = glfwGetTime();
+  float deltaTime = float(currentTime - lastTime);
+
+  // Get mouse position
+  double xpos, ypos;
+  glfwGetCursorPos(wnd, &xpos, &ypos);
+
+  // Reset mouse position for next frame
+  int width, height;
+  glfwGetWindowSize(wnd, &width, &height);
+  glfwSetCursorPos(wnd, width / 2.0, height / 2.0);
+
+  // Compute new orientation
+  horizontalAngle += mouseSpeed * float(width/2 - xpos );
+  verticalAngle   += mouseSpeed * float(height/2 - ypos );
+
+  // Direction : Spherical coordinates to Cartesian coordinates conversion
+  glm::vec3 direction(
+    cos(verticalAngle) * sin(horizontalAngle), 
+    sin(verticalAngle),
+    cos(verticalAngle) * cos(horizontalAngle)
+  );
+  
+  // Right vector
+  glm::vec3 right = glm::vec3(
+    sin(horizontalAngle - 3.14f/2.0f), 
+    0,
+    cos(horizontalAngle - 3.14f/2.0f)
+  );
+  
+  // Up vector
+  glm::vec3 up = glm::cross(right, direction);
+
+  // Move forward
+  if (glfwGetKey(wnd, GLFW_KEY_UP) == GLFW_PRESS) {
+    position += direction * deltaTime * speed;
+  }
+  // Move backward
+  if (glfwGetKey(wnd, GLFW_KEY_DOWN) == GLFW_PRESS) {
+    position -= direction * deltaTime * speed;
+  }
+  // Strafe right
+  if (glfwGetKey(wnd, GLFW_KEY_RIGHT) == GLFW_PRESS) {
+    position += right * deltaTime * speed;
+  }
+  // Strafe left
+  if (glfwGetKey(wnd, GLFW_KEY_LEFT) == GLFW_PRESS) {
+    position -= right * deltaTime * speed;
+  }
+
+  float FoV = initialFoV;// - 5 * glfwGetMouseWheel(); // Now GLFW 3 requires setting up a callback for this. It's a bit too complicated for this beginner's tutorial, so it's disabled instead.
+
+  // Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
+  g_current_projection_matrix = glm::perspective(FoV, 4.0f / 3.0f, 0.1f, 100.0f);
+  // Camera matrix
+  g_current_view_matrix       = glm::lookAt(
+                position,           // Camera is here
+                position+direction, // and looks here : at the same position, plus "direction"
+                up                  // Head is up (set to 0,-1,0 to look upside-down)
+               );
+
+  // For the next frame, the "last time" will be "now"
+  lastTime = currentTime;
+}
+
+glm::mat4 get_current_view_matrix() {
+  return g_current_projection_matrix;
+}
+
+glm::mat4 get_current_projection_matrix() {
+  return g_current_view_matrix;
 }
 
 /*

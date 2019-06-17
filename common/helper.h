@@ -44,4 +44,8 @@ GLuint load_bmp(const char* path);
 
 GLuint load_dds(const char* path);
 
+void refresh_matrix_from_control(GLFWwindow* wnd);
+glm::mat4 get_current_view_matrix();
+glm::mat4 get_current_projection_matrix();
+
 #endif _TUTORIAL_HELPER_H_
