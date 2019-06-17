@@ -12,7 +12,7 @@ GLuint u_scale;
 GLuint u_color;
 
 void
-init() {
+init(GLFWwindow* wnd) {
   program_id = load_shaders("shader/vertex_03.vsh", "shader/frag_03.fsh");
   if (program_id != -1) {
     glUseProgram(program_id);
@@ -56,7 +56,7 @@ init() {
 }
 
 void
-display() {
+display(GLFWwindow* wnd) {
   draw_solid_teapot(1.0);
 }
 

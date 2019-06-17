@@ -21,7 +21,7 @@ using namespace glm;
   if (error != GL_NO_ERROR) { fprintf(stderr, "%s:%d open gl error %d\n", __FILE__, __LINE__, error); } \
 } while (false);
 
-int run(int width, int height, const char* title, void (*init) (), void (*display) ());
+int run(int width, int height, const char* title, void (*init) (GLFWwindow* wnd), void (*display) (GLFWwindow* wnd));
 
 /*
  * Renders a beautiful wired teapot...

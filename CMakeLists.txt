@@ -147,6 +147,17 @@ target_link_libraries(tutorial09_textured_cube
 # Xcode and Visual working directories
 create_target_launcher(tutorial09_textured_cube WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/build/tutorial09_textured_cube/")
 
+# Tutorial 10
+add_executable(tutorial10_input_control
+    src/10_input_control.cpp
+)
+target_link_libraries(tutorial10_input_control
+    ${ALL_LIBS}
+    common
+)
+# Xcode and Visual working directories
+create_target_launcher(tutorial10_input_control WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/build/tutorial10_input_control/")
+
 if (NOT ${CMAKE_GENERATOR} MATCHES "Xcode" )
     add_custom_command(
         TARGET tutorial01_first_window POST_BUILD

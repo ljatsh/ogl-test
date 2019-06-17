@@ -16,7 +16,7 @@ GLuint programID;
 // It seems that glEnableVertexAttribArray and glBindBuffer shoule be combined together
 
 void
-init()
+init(GLFWwindow* wnd)
 {
   static const GLfloat g_vertex_buffer_data[] = { 
     -1.0f,-1.0f,-1.0f, // triangle 1 : begin
@@ -142,7 +142,7 @@ init()
 }
 
 void
-display()
+display(GLFWwindow* wnd)
 {
   // Clear the screen
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

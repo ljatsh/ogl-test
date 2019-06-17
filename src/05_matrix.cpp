@@ -28,7 +28,7 @@ GLuint programID;
 //
 
 void
-init()
+init(GLFWwindow* wnd)
 {
   static const GLfloat g_vertex_buffer_data[] = { 
     -1.0f, -1.0f, 0.0f,
@@ -84,7 +84,7 @@ init()
 }
 
 void
-display()
+display(GLFWwindow* wnd)
 {
   // Draw the triangle !
   glDrawArrays(GL_TRIANGLES, 0, 3); // 3 indices starting at 0 -> 1 triangle

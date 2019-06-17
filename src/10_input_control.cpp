@@ -14,11 +14,6 @@ GLuint uvbuffer;
 GLuint programID;
 GLuint textureID;
 
-// TODO:
-// Show dds without mipmaps
-
-// Tips:
-// It seems that glEnableVertexAttribArray and glBindBuffer shoule be combined together
 
 void
 init(GLFWwindow* wnd)
@@ -122,30 +117,7 @@ init(GLFWwindow* wnd)
   // Use shader
   glUseProgram(programID);
 
-  // Get a handle for our "MVP" uniform
-  GLuint MatrixID = glGetUniformLocation(programID, "MVP");
-
-  // Projection matrix : 45∞ Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
-  glm::mat4 Projection = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
-  // Camera matrix
-  glm::mat4 View       = glm::lookAt(
-                      glm::vec3(4,3,-3), // Camera is at (4,3,-3), in World Space
-                      glm::vec3(0,0,0), // and looks at the origin
-                      glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
-                    );
-  // Model matrix : an identity matrix (model will be at the origin)
-  glm::mat4 Model      = glm::mat4(1.0f);
-  // Our ModelViewProjection : multiplication of our 3 matrices
-  glm::mat4 MVP        = Projection * View * Model; // Remember, matrix multiplication is the other way around
-
-  // Send our transformation to the currently bound shader, 
-  // in the "MVP" uniform
-  glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
-
-  // Load the texture using any two methods
-  //GLuint textureID = load_bmp("texture/uvtemplate.bmp");
-  //GLuint textureID = load_dds("texture/uvtemplate.DDS");
-  GLuint textureID = load_dds("texture/uvtemplate_dx5_miplevel1.DDS");
+  GLuint textureID = load_dds("texture/uvtemplate.DDS");
   // Get a handle for our "myTextureSampler" uniform
   GLuint sampler = glGetUniformLocation(programID, "myTextureSampler");
 
@@ -159,6 +131,15 @@ init(GLFWwindow* wnd)
   glEnable(GL_DEPTH_TEST);
   // Accept fragment if it closer to the camera than the former one
   glDepthFunc(GL_LESS);
+
+  // Ensure we can capture the escape key being pressed below
+	glfwSetInputMode(wnd, GLFW_STICKY_KEYS, GL_TRUE);
+  // Hide the mouse and enable unlimited mouvement
+  //glfwSetInputMode(wnd, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+  
+  // Set the mouse at the center of the screen
+  // glfwPollEvents();
+  // glfwSetCursorPos(wnd, 1024/2, 768/2);
 }
 
 void
@@ -166,6 +147,16 @@ display(GLFWwindow* wnd)
 {
   // Clear the screen
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+  // Get a handle for our "MVP" uniform
+  GLuint MatrixID = glGetUniformLocation(programID, "MVP");
+
+  refresh_matrix_from_control(wnd);
+  glm::mat4 Projection = get_current_projection_matrix();
+  glm::mat4 View = get_current_view_matrix();
+  glm::mat4 Model      = glm::mat4(1.0f);
+  glm::mat4 MVP        = Projection * View * Model;
+  glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
 
   // 1rst attribute buffer : vertices
   glEnableVertexAttribArray(vertexPosition_modelspaceID);
@@ -203,7 +194,7 @@ display(GLFWwindow* wnd)
 int
 main()
 {
-  int ret = run(1024, 768, "Tutorial 09 - A Textured Cube", init, display);
+  int ret = run(1024, 768, "Tutorial 10 - Input Control", init, display);
 
   // Cleanup VBO
   glDeleteBuffers(1, &vertexbuffer);

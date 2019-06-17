@@ -11,7 +11,7 @@ GLbyte texture2d[32][32][4];
 
 
 void
-init() {
+init(GLFWwindow* wnd) {
   // 1 dimension texutre
   // green red, green, red
   for (int i=0; i<=2; i+=2) {
@@ -78,7 +78,7 @@ init() {
 }
 
 void
-display() {
+display(GLFWwindow* wnd) {
   glEnable(GL_TEXTURE_1D);
   glBegin(GL_LINES);
     glTexCoord1f(0.0f);

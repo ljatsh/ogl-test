@@ -4,7 +4,7 @@
 GLuint program_id;
 
 void
-init() {
+init(GLFWwindow* wnd) {
   program_id = load_shaders("shader/vertex_04.vsh", "shader/frag_04.fsh");
   if (program_id != -1) {
     glUseProgram(program_id);
@@ -12,7 +12,7 @@ init() {
 }
 
 void
-display() {
+display(GLFWwindow* wnd) {
   glBegin(GL_TRIANGLES);
       glVertex3f(-0.5f, -0.5f, 0.0f);
       glColor3f(1.0,0.0,0.0);

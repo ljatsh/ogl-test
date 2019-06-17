@@ -14,7 +14,7 @@ GLuint vertexPosition_modelspaceID = 0;
 GLuint programID;
 
 void
-init()
+init(GLFWwindow* wnd)
 {
   static const GLfloat g_vertex_buffer_data[] = { 
     -1.0f, -1.0f, 0.0f,
@@ -48,7 +48,7 @@ init()
 }
 
 void
-display()
+display(GLFWwindow* wnd)
 {
   // Draw the triangle !
   //glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);

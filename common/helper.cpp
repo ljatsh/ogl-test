@@ -37,7 +37,7 @@ void on_size_updated(GLFWwindow* wnd, int width, int height) {
   fprintf(stdout, "GLFWwindow %p frame buffer size: %d, %d\n", wnd, w, h);
 }
 
-int run(int width, int height, const char* title, void (*init) (), void (*display) ()) {
+int run(int width, int height, const char* title, void (*init) (GLFWwindow* wnd), void (*display) (GLFWwindow* wnd)) {
   // Initialise GLFW
   if(!glfwInit()) {
     fprintf(stderr, "Failed to initialize GLFW\n" );
@@ -78,7 +78,7 @@ int run(int width, int height, const char* title, void (*init) (), void (*displa
   fprintf(stdout, "glew version:%s\n", glewGetString(GLEW_VERSION));
 
   if (init != nullptr)
-    init();
+    init(window);
 
   do{
     // Clear the screen. It's not mentioned before Tutorial 02, but it can cause flickering, so it's there nonetheless.
@@ -86,7 +86,7 @@ int run(int width, int height, const char* title, void (*init) (), void (*displa
 
     // Draw
     if (display != nullptr)
-      display();
+      display(window);
     
     // Swap buffers
     glfwSwapBuffers(window);
@@ -317,7 +317,7 @@ void refresh_matrix_from_control(GLFWwindow* wnd) {
   // Reset mouse position for next frame
   int width, height;
   glfwGetWindowSize(wnd, &width, &height);
-  glfwSetCursorPos(wnd, width / 2.0, height / 2.0);
+  //glfwSetCursorPos(wnd, width / 2.0, height / 2.0);
 
   // Compute new orientation
   horizontalAngle += mouseSpeed * float(width/2 - xpos );
@@ -373,11 +373,11 @@ void refresh_matrix_from_control(GLFWwindow* wnd) {
 }
 
 glm::mat4 get_current_view_matrix() {
-  return g_current_projection_matrix;
+  return g_current_view_matrix;
 }
 
 glm::mat4 get_current_projection_matrix() {
-  return g_current_view_matrix;
+  return g_current_projection_matrix;
 }
 
 /*

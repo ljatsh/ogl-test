@@ -44,7 +44,7 @@ void check_line() {
 }
 
 void
-init()
+init(GLFWwindow* wnd)
 {
   glEnableClientState(GL_VERTEX_ARRAY);
   glEnableClientState(GL_COLOR_ARRAY);
@@ -63,7 +63,7 @@ init()
 }
 
 void
-display()
+display(GLFWwindow* wnd)
 {
   // Normalized Coordinates
 
