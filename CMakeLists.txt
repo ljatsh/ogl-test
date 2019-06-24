@@ -158,6 +158,17 @@ target_link_libraries(tutorial10_input_control
 # Xcode and Visual working directories
 create_target_launcher(tutorial10_input_control WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/build/tutorial10_input_control/")
 
+# Tutorial 11
+add_executable(tutorial11_blender_model
+    src/11_blender_model.cpp
+)
+target_link_libraries(tutorial11_blender_model
+    ${ALL_LIBS}
+    common
+)
+# Xcode and Visual working directories
+create_target_launcher(tutorial11_blender_model WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/build/tutorial11_blender_model/")
+
 if (NOT ${CMAKE_GENERATOR} MATCHES "Xcode" )
     add_custom_command(
         TARGET tutorial01_first_window POST_BUILD
@@ -168,6 +179,7 @@ elseif (${CMAKE_GENERATOR} MATCHES "Xcode" )
         TARGET common POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/shader" "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/shader"
         COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/texture" "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/texture"
+        COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/model" "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/model"
     )
 endif (NOT ${CMAKE_GENERATOR} MATCHES "Xcode" )
 

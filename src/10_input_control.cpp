@@ -14,7 +14,6 @@ GLuint uvbuffer;
 GLuint programID;
 GLuint textureID;
 
-
 void
 init(GLFWwindow* wnd)
 {
@@ -135,11 +134,11 @@ init(GLFWwindow* wnd)
   // Ensure we can capture the escape key being pressed below
 	glfwSetInputMode(wnd, GLFW_STICKY_KEYS, GL_TRUE);
   // Hide the mouse and enable unlimited mouvement
-  //glfwSetInputMode(wnd, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+  glfwSetInputMode(wnd, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
   
   // Set the mouse at the center of the screen
-  // glfwPollEvents();
-  // glfwSetCursorPos(wnd, 1024/2, 768/2);
+  glfwPollEvents();
+  glfwSetCursorPos(wnd, 1024/2, 768/2);
 }
 
 void

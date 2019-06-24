@@ -5,6 +5,7 @@
 // Include standard headers
 #include <stdio.h>
 #include <stdlib.h>
+#include <vector>
 
 // Include GLEW
 #include <GL/glew.h>
@@ -47,5 +48,12 @@ GLuint load_dds(const char* path);
 void refresh_matrix_from_control(GLFWwindow* wnd);
 glm::mat4 get_current_view_matrix();
 glm::mat4 get_current_projection_matrix();
+
+bool load_obj(
+  const char * path,
+  std::vector<glm::vec3> & out_vertices, 
+  std::vector<glm::vec2> & out_uvs, 
+  std::vector<glm::vec3> & out_normals
+);
 
 #endif _TUTORIAL_HELPER_H_
