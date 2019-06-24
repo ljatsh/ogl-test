@@ -40,10 +40,10 @@ init(GLFWwindow* wnd) {
   glDepthFunc(GL_LESS); 
 
   // Cull triangles which normal is not towards the camera
-  glEnable(GL_CULL_FACE);
+  //glEnable(GL_CULL_FACE); // not this time!
 
   // Create and compile our GLSL program from the shaders
-  programID = load_shaders("shader/vertex_12.vsh", "shader/frag_12.fsh");
+  programID = load_shaders("shader/vertex_13.vsh", "shader/frag_13.fsh");
 
   // Get a handle for our "MVP" uniform
   MatrixID = glGetUniformLocation(programID, "MVP");
@@ -100,6 +100,10 @@ init(GLFWwindow* wnd) {
   LightID = glGetUniformLocation(programID, "LightPosition_worldspace");
 
   lastTime = glfwGetTime();
+
+  // Enable blending
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 void
@@ -196,7 +200,7 @@ display(GLFWwindow* wnd) {
 
 int
 main() {
-  int ret = run(1024, 768, "Tutorial 12 -- VBO Index", init, display);
+  int ret = run(1024, 768, "Tutorial 13 -- Transparency", init, display);
 
   glDeleteProgram(programID);
   glDeleteBuffers(1, &vertexbuffer);

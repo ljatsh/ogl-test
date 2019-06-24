@@ -180,6 +180,17 @@ target_link_libraries(tutorial12_vbo_index
 # Xcode and Visual working directories
 create_target_launcher(tutorial12_vbo_index WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/build/tutorial12_vbo_index/")
 
+# Tutorial 13
+add_executable(tutorial13_transparency
+    src/13_transparency.cpp
+)
+target_link_libraries(tutorial13_transparency
+    ${ALL_LIBS}
+    common
+)
+# Xcode and Visual working directories
+create_target_launcher(tutorial13_transparency WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/build/tutorial13_transparency/")
+
 if (NOT ${CMAKE_GENERATOR} MATCHES "Xcode" )
     add_custom_command(
         TARGET tutorial01_first_window POST_BUILD
