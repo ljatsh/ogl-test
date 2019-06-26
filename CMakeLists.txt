@@ -191,6 +191,17 @@ target_link_libraries(tutorial13_transparency
 # Xcode and Visual working directories
 create_target_launcher(tutorial13_transparency WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/build/tutorial13_transparency/")
 
+# Tutorial 14
+add_executable(tutorial14_basic_shading
+    src/14_basic_shading.cpp
+)
+target_link_libraries(tutorial14_basic_shading
+    ${ALL_LIBS}
+    common
+)
+# Xcode and Visual working directories
+create_target_launcher(tutorial14_basic_shading WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/build/tutorial14_basic_shading/")
+
 if (NOT ${CMAKE_GENERATOR} MATCHES "Xcode" )
     add_custom_command(
         TARGET tutorial01_first_window POST_BUILD
