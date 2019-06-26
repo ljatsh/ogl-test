@@ -67,8 +67,33 @@ void index_vbo(
   std::vector<glm::vec3> & out_normals
 );
 
+void index_vbo_tbn(
+  std::vector<glm::vec3> & in_vertices,
+  std::vector<glm::vec2> & in_uvs,
+  std::vector<glm::vec3> & in_normals,
+  std::vector<glm::vec3> & in_tangents,
+  std::vector<glm::vec3> & in_bitangents,
+
+  std::vector<unsigned short> & out_indices,
+  std::vector<glm::vec3> & out_vertices,
+  std::vector<glm::vec2> & out_uvs,
+  std::vector<glm::vec3> & out_normals,
+  std::vector<glm::vec3> & out_tangents,
+  std::vector<glm::vec3> & out_bitangents
+);
+
 void init_text_2d(const char * texturePath);
 void print_text(const char * text, int x, int y, int size);
 void clear_text();
+
+void compute_tagent_basics(
+  // inputs
+  std::vector<glm::vec3> & vertices,
+  std::vector<glm::vec2> & uvs,
+  std::vector<glm::vec3> & normals,
+  // outputs
+  std::vector<glm::vec3> & tangents,
+  std::vector<glm::vec3> & bitangents
+);
 
 #endif _TUTORIAL_HELPER_H_

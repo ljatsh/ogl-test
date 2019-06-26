@@ -213,6 +213,17 @@ target_link_libraries(tutorial15_text
 # Xcode and Visual working directories
 create_target_launcher(tutorial15_text WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/build/tutorial15_text/")
 
+# Tutorial 16
+add_executable(tutorial16_normal_mapping
+    src/16_normal_mapping.cpp
+)
+target_link_libraries(tutorial16_normal_mapping
+    ${ALL_LIBS}
+    common
+)
+# Xcode and Visual working directories
+create_target_launcher(tutorial16_normal_mapping WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/build/tutorial16_normal_mapping/")
+
 if (NOT ${CMAKE_GENERATOR} MATCHES "Xcode" )
     add_custom_command(
         TARGET tutorial01_first_window POST_BUILD
