@@ -202,6 +202,17 @@ target_link_libraries(tutorial14_basic_shading
 # Xcode and Visual working directories
 create_target_launcher(tutorial14_basic_shading WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/build/tutorial14_basic_shading/")
 
+# Tutorial 15
+add_executable(tutorial15_text
+    src/15_text.cpp
+)
+target_link_libraries(tutorial15_text
+    ${ALL_LIBS}
+    common
+)
+# Xcode and Visual working directories
+create_target_launcher(tutorial15_text WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/build/tutorial15_text/")
+
 if (NOT ${CMAKE_GENERATOR} MATCHES "Xcode" )
     add_custom_command(
         TARGET tutorial01_first_window POST_BUILD

@@ -1,5 +1,6 @@
 
 #include "helper.h"
+#include "shader.h"
 
 #include <time.h>
 #include <math.h>
@@ -481,126 +482,238 @@ bool load_obj(
 
 // Returns true iif v1 can be considered equal to v2
 bool is_near(float v1, float v2){
-	return fabs( v1-v2 ) < 0.01f;
+  return fabs( v1-v2 ) < 0.01f;
 }
 
 // Searches through all already-exported vertices
 // for a similar one.
 // Similar = same position + same UVs + same normal
 bool get_similar_vertex_index(
-	glm::vec3 & in_vertex, 
-	glm::vec2 & in_uv, 
-	glm::vec3 & in_normal, 
-	std::vector<glm::vec3> & out_vertices,
-	std::vector<glm::vec2> & out_uvs,
-	std::vector<glm::vec3> & out_normals,
-	unsigned short & result
+  glm::vec3 & in_vertex, 
+  glm::vec2 & in_uv, 
+  glm::vec3 & in_normal, 
+  std::vector<glm::vec3> & out_vertices,
+  std::vector<glm::vec2> & out_uvs,
+  std::vector<glm::vec3> & out_normals,
+  unsigned short & result
 ){
-	// Lame linear search
-	for ( unsigned int i=0; i<out_vertices.size(); i++ ){
-		if (
-			is_near( in_vertex.x , out_vertices[i].x ) &&
-			is_near( in_vertex.y , out_vertices[i].y ) &&
-			is_near( in_vertex.z , out_vertices[i].z ) &&
-			is_near( in_uv.x     , out_uvs     [i].x ) &&
-			is_near( in_uv.y     , out_uvs     [i].y ) &&
-			is_near( in_normal.x , out_normals [i].x ) &&
-			is_near( in_normal.y , out_normals [i].y ) &&
-			is_near( in_normal.z , out_normals [i].z )
-		){
-			result = i;
-			return true;
-		}
-	}
-	// No other vertex could be used instead.
-	// Looks like we'll have to add it to the VBO.
-	return false;
+  // Lame linear search
+  for ( unsigned int i=0; i<out_vertices.size(); i++ ){
+    if (
+      is_near( in_vertex.x , out_vertices[i].x ) &&
+      is_near( in_vertex.y , out_vertices[i].y ) &&
+      is_near( in_vertex.z , out_vertices[i].z ) &&
+      is_near( in_uv.x     , out_uvs     [i].x ) &&
+      is_near( in_uv.y     , out_uvs     [i].y ) &&
+      is_near( in_normal.x , out_normals [i].x ) &&
+      is_near( in_normal.y , out_normals [i].y ) &&
+      is_near( in_normal.z , out_normals [i].z )
+    ){
+      result = i;
+      return true;
+    }
+  }
+  // No other vertex could be used instead.
+  // Looks like we'll have to add it to the VBO.
+  return false;
 }
 
 void index_vbo_slow(
-	std::vector<glm::vec3> & in_vertices,
-	std::vector<glm::vec2> & in_uvs,
-	std::vector<glm::vec3> & in_normals,
+  std::vector<glm::vec3> & in_vertices,
+  std::vector<glm::vec2> & in_uvs,
+  std::vector<glm::vec3> & in_normals,
 
-	std::vector<unsigned short> & out_indices,
-	std::vector<glm::vec3> & out_vertices,
-	std::vector<glm::vec2> & out_uvs,
-	std::vector<glm::vec3> & out_normals
+  std::vector<unsigned short> & out_indices,
+  std::vector<glm::vec3> & out_vertices,
+  std::vector<glm::vec2> & out_uvs,
+  std::vector<glm::vec3> & out_normals
 ){
-	// For each input vertex
-	for ( unsigned int i=0; i<in_vertices.size(); i++ ){
+  // For each input vertex
+  for ( unsigned int i=0; i<in_vertices.size(); i++ ){
 
-		// Try to find a similar vertex in out_XXXX
-		unsigned short index;
-		bool found = get_similar_vertex_index(in_vertices[i], in_uvs[i], in_normals[i],     out_vertices, out_uvs, out_normals, index);
+    // Try to find a similar vertex in out_XXXX
+    unsigned short index;
+    bool found = get_similar_vertex_index(in_vertices[i], in_uvs[i], in_normals[i],     out_vertices, out_uvs, out_normals, index);
 
-		if ( found ){ // A similar vertex is already in the VBO, use it instead !
-			out_indices.push_back( index );
-		}else{ // If not, it needs to be added in the output data.
-			out_vertices.push_back( in_vertices[i]);
-			out_uvs     .push_back( in_uvs[i]);
-			out_normals .push_back( in_normals[i]);
-			out_indices .push_back( (unsigned short)out_vertices.size() - 1 );
-		}
-	}
+    if ( found ){ // A similar vertex is already in the VBO, use it instead !
+      out_indices.push_back( index );
+    }else{ // If not, it needs to be added in the output data.
+      out_vertices.push_back( in_vertices[i]);
+      out_uvs     .push_back( in_uvs[i]);
+      out_normals .push_back( in_normals[i]);
+      out_indices .push_back( (unsigned short)out_vertices.size() - 1 );
+    }
+  }
 }
 
 struct PackedVertex{
-	glm::vec3 position;
-	glm::vec2 uv;
-	glm::vec3 normal;
-	bool operator<(const PackedVertex that) const{
-		return memcmp((void*)this, (void*)&that, sizeof(PackedVertex))>0;
-	};
+  glm::vec3 position;
+  glm::vec2 uv;
+  glm::vec3 normal;
+  bool operator<(const PackedVertex that) const{
+    return memcmp((void*)this, (void*)&that, sizeof(PackedVertex))>0;
+  };
 };
 
 bool get_similar_vertex_index_fast(
-	PackedVertex & packed, 
-	std::map<PackedVertex,unsigned short> & VertexToOutIndex,
-	unsigned short & result
+  PackedVertex & packed, 
+  std::map<PackedVertex,unsigned short> & VertexToOutIndex,
+  unsigned short & result
 ){
-	std::map<PackedVertex,unsigned short>::iterator it = VertexToOutIndex.find(packed);
-	if ( it == VertexToOutIndex.end() ){
-		return false;
-	}else{
-		result = it->second;
-		return true;
-	}
+  std::map<PackedVertex,unsigned short>::iterator it = VertexToOutIndex.find(packed);
+  if ( it == VertexToOutIndex.end() ){
+    return false;
+  }else{
+    result = it->second;
+    return true;
+  }
 }
 
 void index_vbo(
-	std::vector<glm::vec3> & in_vertices,
-	std::vector<glm::vec2> & in_uvs,
-	std::vector<glm::vec3> & in_normals,
+  std::vector<glm::vec3> & in_vertices,
+  std::vector<glm::vec2> & in_uvs,
+  std::vector<glm::vec3> & in_normals,
 
-	std::vector<unsigned short> & out_indices,
-	std::vector<glm::vec3> & out_vertices,
-	std::vector<glm::vec2> & out_uvs,
-	std::vector<glm::vec3> & out_normals
+  std::vector<unsigned short> & out_indices,
+  std::vector<glm::vec3> & out_vertices,
+  std::vector<glm::vec2> & out_uvs,
+  std::vector<glm::vec3> & out_normals
 ){
-	std::map<PackedVertex,unsigned short> VertexToOutIndex;
+  std::map<PackedVertex,unsigned short> VertexToOutIndex;
 
-	// For each input vertex
-	for ( unsigned int i=0; i<in_vertices.size(); i++ ){
+  // For each input vertex
+  for ( unsigned int i=0; i<in_vertices.size(); i++ ){
 
-		PackedVertex packed = {in_vertices[i], in_uvs[i], in_normals[i]};
-		
+    PackedVertex packed = {in_vertices[i], in_uvs[i], in_normals[i]};
+    
 
-		// Try to find a similar vertex in out_XXXX
-		unsigned short index;
-		bool found = get_similar_vertex_index_fast(packed, VertexToOutIndex, index);
+    // Try to find a similar vertex in out_XXXX
+    unsigned short index;
+    bool found = get_similar_vertex_index_fast(packed, VertexToOutIndex, index);
 
-		if ( found ){ // A similar vertex is already in the VBO, use it instead !
-			out_indices.push_back( index );
-		}else{ // If not, it needs to be added in the output data.
-			out_vertices.push_back( in_vertices[i]);
-			out_uvs     .push_back( in_uvs[i]);
-			out_normals .push_back( in_normals[i]);
-			unsigned short newindex = (unsigned short)out_vertices.size() - 1;
-			out_indices .push_back( newindex );
-			VertexToOutIndex[ packed ] = newindex;
-		}
-	}
+    if ( found ){ // A similar vertex is already in the VBO, use it instead !
+      out_indices.push_back( index );
+    }else{ // If not, it needs to be added in the output data.
+      out_vertices.push_back( in_vertices[i]);
+      out_uvs     .push_back( in_uvs[i]);
+      out_normals .push_back( in_normals[i]);
+      unsigned short newindex = (unsigned short)out_vertices.size() - 1;
+      out_indices .push_back( newindex );
+      VertexToOutIndex[ packed ] = newindex;
+    }
+  }
+}
+
+unsigned int Text2DTextureID;              // Texture containing the font
+unsigned int Text2DVertexBufferID;         // Buffer containing the vertices
+unsigned int Text2DUVBufferID;             //                       UVs
+unsigned int Text2DShaderID;               // Program used to disaply the text
+unsigned int vertexPosition_screenspaceID; // Location of the program's "vertexPosition_screenspace" attribute
+unsigned int _vertexUVID;                  // Location of the program's "vertexUV" attribute
+unsigned int Text2DUniformID;              // Location of the program's texture attribute
+
+void init_text_2d(const char * texturePath){
+
+  // Initialize texture
+  Text2DTextureID = load_dds(texturePath);
+
+  // Initialize VBO
+  glGenBuffers(1, &Text2DVertexBufferID);
+  glGenBuffers(1, &Text2DUVBufferID);
+
+  // Initialize Shader
+  Text2DShaderID = load_shaders("shader/text.vsh", "shader/text.fsh" );
+
+  // Get a handle for our buffers
+  vertexPosition_screenspaceID = glGetAttribLocation(Text2DShaderID, "vertexPosition_screenspace");
+  _vertexUVID = glGetAttribLocation(Text2DShaderID, "vertexUV");
+
+  // Initialize uniforms' IDs
+  Text2DUniformID = glGetUniformLocation(Text2DShaderID, "myTextureSampler");
+}
+
+void print_text(const char * text, int x, int y, int size) {
+  unsigned int length = strlen(text);
+
+  // Fill buffers
+  std::vector<glm::vec2> vertices;
+  std::vector<glm::vec2> UVs;
+  for ( unsigned int i=0 ; i<length ; i++ ){
+    glm::vec2 vertex_up_left    = glm::vec2( x+i*size     , y+size );
+    glm::vec2 vertex_up_right   = glm::vec2( x+i*size+size, y+size );
+    glm::vec2 vertex_down_right = glm::vec2( x+i*size+size, y      );
+    glm::vec2 vertex_down_left  = glm::vec2( x+i*size     , y      );
+
+    vertices.push_back(vertex_up_left   );
+    vertices.push_back(vertex_down_left );
+    vertices.push_back(vertex_up_right  );
+
+    vertices.push_back(vertex_down_right);
+    vertices.push_back(vertex_up_right);
+    vertices.push_back(vertex_down_left);
+
+    char character = text[i];
+    float uv_x = (character%16)/16.0f;
+    float uv_y = (character/16)/16.0f;
+
+    glm::vec2 uv_up_left    = glm::vec2( uv_x           , uv_y );
+    glm::vec2 uv_up_right   = glm::vec2( uv_x+1.0f/16.0f, uv_y );
+    glm::vec2 uv_down_right = glm::vec2( uv_x+1.0f/16.0f, (uv_y + 1.0f/16.0f) );
+    glm::vec2 uv_down_left  = glm::vec2( uv_x           , (uv_y + 1.0f/16.0f) );
+    UVs.push_back(uv_up_left   );
+    UVs.push_back(uv_down_left );
+    UVs.push_back(uv_up_right  );
+
+    UVs.push_back(uv_down_right);
+    UVs.push_back(uv_up_right);
+    UVs.push_back(uv_down_left);
+  }
+  glBindBuffer(GL_ARRAY_BUFFER, Text2DVertexBufferID);
+  glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec2), &vertices[0], GL_STATIC_DRAW);
+  glBindBuffer(GL_ARRAY_BUFFER, Text2DUVBufferID);
+  glBufferData(GL_ARRAY_BUFFER, UVs.size() * sizeof(glm::vec2), &UVs[0], GL_STATIC_DRAW);
+
+  // Bind shader
+  glUseProgram(Text2DShaderID);
+
+  // Bind texture
+  glActiveTexture(GL_TEXTURE0);
+  glBindTexture(GL_TEXTURE_2D, Text2DTextureID);
+  // Set our "myTextureSampler" sampler to user Texture Unit 0
+  glUniform1i(Text2DUniformID, 0);
+
+  // 1rst attribute buffer : vertices
+  glEnableVertexAttribArray(vertexPosition_screenspaceID);
+  glBindBuffer(GL_ARRAY_BUFFER, Text2DVertexBufferID);
+  glVertexAttribPointer(vertexPosition_screenspaceID, 2, GL_FLOAT, GL_FALSE, 0, (void*)0 );
+
+  // 2nd attribute buffer : UVs
+  glEnableVertexAttribArray(_vertexUVID);
+  glBindBuffer(GL_ARRAY_BUFFER, Text2DUVBufferID);
+  glVertexAttribPointer(_vertexUVID, 2, GL_FLOAT, GL_FALSE, 0, (void*)0 );
+
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+  // Draw call
+  glDrawArrays(GL_TRIANGLES, 0, vertices.size() );
+
+  glDisable(GL_BLEND);
+
+  glDisableVertexAttribArray(vertexPosition_screenspaceID);
+  glDisableVertexAttribArray(_vertexUVID);
+}
+
+void clear_text() {
+  // Delete buffers
+  glDeleteBuffers(1, &Text2DVertexBufferID);
+  glDeleteBuffers(1, &Text2DUVBufferID);
+
+  // Delete texture
+  glDeleteTextures(1, &Text2DTextureID);
+
+  // Delete shader
+  glDeleteProgram(Text2DShaderID);
 }
 
 /*

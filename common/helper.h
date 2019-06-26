@@ -67,4 +67,8 @@ void index_vbo(
   std::vector<glm::vec3> & out_normals
 );
 
+void init_text_2d(const char * texturePath);
+void print_text(const char * text, int x, int y, int size);
+void clear_text();
+
 #endif _TUTORIAL_HELPER_H_
