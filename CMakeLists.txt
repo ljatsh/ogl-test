@@ -10,4 +10,4 @@ link_libraries(SDL2-static ${OPENGL_LIBRARY})
 #https://stackoverflow.com/questions/27585896/how-to-use-framework-using-cmake
 
 # 使用sdl创建一个空窗口
-add_executable(01_window src/sdl_01_window.cpp)
+add_executable(01_primitive src/sdl_01_primitive.cpp)

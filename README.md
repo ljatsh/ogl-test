@@ -21,3 +21,8 @@ https://gpuinspector.dev/docs/
 https://renderdoc.org
 https://learnopengl.com/In-Practice/Text-Rendering
 https://developer.apple.com/library/archive/documentation/GraphicsImaging/Conceptual/OpenGL-MacProgGuide/opengl_intro/opengl_intro.html#//apple_ref/doc/uid/TP40001987-CH207-TP9
+
+TODO
+----
+
+* [degenerate polygons](https://cs.stackexchange.com/questions/12521/what-are-degenerate-polygons)

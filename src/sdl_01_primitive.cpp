@@ -24,8 +24,8 @@ int main(int argc, const char* argv[])
       "An SDL2 window",                  // window title
       SDL_WINDOWPOS_UNDEFINED,           // initial x position
       SDL_WINDOWPOS_UNDEFINED,           // initial y position
-      640,                               // width, in pixels
-      480,                               // height, in pixels
+      1024,                              // width, in pixels
+      768,                               // height, in pixels
       SDL_WINDOW_OPENGL|SDL_WINDOW_RESIZABLE                  // flags - see below
   );
 
@@ -64,12 +64,12 @@ int main(int argc, const char* argv[])
 
   glClearColor(0, 0, 0, 0);
 
-  glViewport(0, 0, 640, 480);
+  glViewport(0, 0, 1024, 768);
 
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
 
-  glOrtho(0, 640, 480, 0, 1, -1);
+  glOrtho(0, 1024, 768, 0, 1, -1);
 
   glMatrixMode(GL_MODELVIEW);
 
@@ -86,17 +86,94 @@ int main(int argc, const char* argv[])
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
- 
-    // glBegin(GL_QUADS);
-    //     glColor3f(1, 0, 0); glVertex3f(0, 0, 0);
-    //     glColor3f(1, 1, 0); glVertex3f(100, 0, 0);
-    //     glColor3f(1, 0, 1); glVertex3f(100, 100, 0);
-    //     glColor3f(1, 1, 1); glVertex3f(0, 100, 0);
-    // glEnd();
 
+    // Point
     glBegin(GL_POINTS);
-      glVertex2i(50, 100);
-      glVertex2i(75, 150);
+      glVertex2i(10, 10);
+      glVertex2i(20, 20);
+    glEnd();
+
+    // Lines
+    glBegin(GL_LINES);
+      glVertex2i(60, 5);
+      glVertex2i(65, 10);
+
+      glVertex2i(65, 15);
+      glVertex2i(70, 15);
+
+      glVertex2i(70, 20);
+      glVertex2i(80, 30);
+    glEnd();
+
+    glBegin(GL_LINE_STRIP);
+      glVertex2i(60+50, 5);
+      glVertex2i(65+50, 10);
+      glVertex2i(65+50, 15);
+      glVertex2i(70+50, 15);
+      glVertex2i(70+50, 20);
+      glVertex2i(80+50, 30);
+    glEnd();
+
+    glBegin(GL_LINE_LOOP);
+      glVertex2i(60+100, 5);
+      glVertex2i(65+100, 10);
+      glVertex2i(65+100, 15);
+      glVertex2i(70+100, 15);
+      glVertex2i(70+100, 20);
+      glVertex2i(80+100, 30);
+    glEnd();
+
+    ///////////////// Fill Area
+
+    glBegin(GL_TRIANGLES);
+      glVertex2i(225, 5);
+      glVertex2i(200, 25);
+      glVertex2i(240, 25);
+
+      glVertex2i(200, 30);
+      glVertex2i(240, 30);
+      glVertex2i(225, 59);
+    glEnd();
+
+    glBegin(GL_TRIANGLE_STRIP);
+      glVertex2i(225+50, 5);
+      glVertex2i(200+50, 25);
+      glVertex2i(240+50, 25);
+      glVertex2i(225+50, 59);
+    glEnd();
+
+    glBegin(GL_TRIANGLE_FAN);
+      glVertex2i(325, 0);
+      glVertex2i(300, 50);
+      glVertex2i(310, 50);
+      glVertex2i(330, 25);
+      glVertex2i(350, 25);
+    glEnd();
+
+    // 定点需要逆时针设置， 更改后面两个的顺序， 会出现奇怪的图案
+    glBegin(GL_QUADS);
+      glVertex2i(410, 5);
+      glVertex2i(440, 5);
+      glVertex2i(450, 45);
+      glVertex2i(400, 45);
+
+      glVertex2i(400, 55);
+      glVertex2i(450, 55);
+      glVertex2i(440, 100);
+      glVertex2i(410, 100);
+    glEnd();
+
+    // Note that the order in which vertices are used to construct a quadrilateral from strip data is different from that used with independent data.
+    glBegin(GL_QUAD_STRIP);
+      glVertex2i(410+50, 5);
+      glVertex2i(440+50, 5);
+      glVertex2i(400+50, 45);
+      glVertex2i(450+50, 45);
+
+      glVertex2i(400+50, 55);
+      glVertex2i(450+50, 55);
+      glVertex2i(410+50, 100);
+      glVertex2i(440+50, 100);
     glEnd();
  
     SDL_GL_SwapWindow(window);
