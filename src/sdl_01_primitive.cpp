@@ -13,6 +13,9 @@ void show_gl_info() {
   fprintf(stdout, "extensions:%s\n", glGetString(GL_EXTENSIONS));
 }
 
+#ifdef WIN32
+#undef main
+#endif // WIN32
 int main(int argc, const char* argv[])
 {
   SDL_Window *window;                    // Declare a pointer

@@ -33,4 +33,5 @@
 
 *.DS_Store
 build/
+build_win/
 .vscode
