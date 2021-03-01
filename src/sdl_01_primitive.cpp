@@ -10,7 +10,10 @@ void show_gl_info() {
   fprintf(stdout, "renderer:%s\n", glGetString(GL_RENDERER));
   fprintf(stdout, "version:%s\n", glGetString(GL_VERSION));
   fprintf(stdout, "glsl version:%s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
-  fprintf(stdout, "extensions:%s\n", glGetString(GL_EXTENSIONS));
+  //fprintf(stdout, "extensions:%s\n", glGetString(GL_EXTENSIONS));
+
+  GLboolean enabled = glIsEnabled(GL_VERTEX_ARRAY);
+  fprintf(stdout, "GL_VERTEX_ARRAY enabled: %s\n", enabled ? "true" : "false");
 }
 
 #ifdef WIN32
@@ -83,6 +86,9 @@ int main(int argc, const char* argv[])
   // Dark blue background
   glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
   SDL_Event event;
+
+  glEnableClientState(GL_VERTEX_ARRAY);
+
   do{
     // // Clear the screen
     // glClear(GL_COLOR_BUFFER_BIT);
@@ -178,7 +184,22 @@ int main(int argc, const char* argv[])
       glVertex2i(410+50, 100);
       glVertex2i(440+50, 100);
     glEnd();
- 
+
+    // vertex array https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glVertexPointer.xml
+    GLint vertices1[] = {410 + 100, 5,
+                         440 + 100, 5,
+                         400 + 100, 45,
+                         450 + 100, 45,
+                         400 + 100, 55,
+                         450 + 100, 55,
+                         410 + 100, 100,
+                         440 + 100, 100};
+
+    glVertexPointer(2, GL_INT, 0, vertices1);
+    GLubyte vertice_index1[] = {0, 1, 2, 3,
+                                4, 5, 6, 7};
+    glDrawElements(GL_QUAD_STRIP, 8, GL_UNSIGNED_BYTE, vertice_index1);
+
     SDL_GL_SwapWindow(window);
 
     SDL_PollEvent(&event);
