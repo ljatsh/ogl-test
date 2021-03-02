@@ -200,6 +200,31 @@ int main(int argc, const char* argv[])
                                 4, 5, 6, 7};
     glDrawElements(GL_QUAD_STRIP, 8, GL_UNSIGNED_BYTE, vertice_index1);
 
+    // bitmap https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glBitmap.xml
+    GLubyte bitShape[20] = {
+      0x1c, 0x00, 0x1c, 0x00, 0x1c, 0x00, 0x1c, 0x00, 0x1c, 0x00,
+      0xff, 0x80, 0x7f, 0x00, 0x3e, 0x00, 0x1c, 0x00, 0x08, 0x00
+    };
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    glRasterPos2i(600, 100);
+    glBitmap(9, 10, 0.0, 0.0, 20.0, 15.0, bitShape);
+
+    // pixmap https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/
+    int row = 50;
+    int column = 50;
+    int color = 0;
+    int number = 0;
+    int size = row * column;
+    GLuint* pixMap = new GLuint[size]();
+    for (int i=0; i<row; i++)
+      for (int j=0; j<column; j++) {
+        number = j + (i * column);
+        color = int(255 * number / size);
+        *(pixMap + number) = (color << 24) | (color << 16) | (color << 8) | 0xff;
+      }
+    glDrawPixels(50, 50, GL_RGBA, GL_UNSIGNED_INT_8_8_8_8	, pixMap);
+    delete[] pixMap;
+
     SDL_GL_SwapWindow(window);
 
     SDL_PollEvent(&event);
